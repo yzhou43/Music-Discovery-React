@@ -167,18 +167,27 @@ def login_post():
 
 @app.route("/save", methods=["POST"])
 def save():
-    artist_id = flask.request.form.get("artist_id")
-    try:
-        access_token = get_access_token()
-        get_song_data(artist_id, access_token)
-    except Exception:
-        flask.flash("Invalid artist ID entered")
-        return flask.redirect(flask.url_for("bp.index"))
-
-    username = current_user.username
-    db.session.add(Artist(artist_id=artist_id, username=username))
+    Artist.query.filter_by(username=current_user.username).delete()
+    artist_list = flask.request.json.get("artist_list")
+    invalid_id = 0
+    invalid_num = 0
+    for artist_id in artist_list:
+        try:
+            access_token = get_access_token()
+            get_song_data(artist_id, access_token)
+        except Exception:
+            invalid_id = 1
+        if Artist.query.filter_by(artist_id=artist_id, username=current_user.username).first():
+            invalid_id = 1
+        if invalid_id:
+            invalid_num += 1
+        else:
+            username = current_user.username
+            db.session.add(Artist(artist_id=artist_id, username=username))
     db.session.commit()
-    return flask.redirect(flask.url_for("bp.index"))
+    artists = Artist.query.filter_by(username=current_user.username).all()
+    artist_ids = [a.artist_id for a in artists]
+    return flask.jsonify({"artistLists_server": artist_ids, "invalid_num": invalid_num})
 
 
 @app.route("/")
@@ -186,12 +195,6 @@ def main():
     if current_user.is_authenticated:
         return flask.redirect(flask.url_for("bp.index"))
     return flask.redirect(flask.url_for("login"))
-
-
-@app.route("/increment", methods=["POST"])
-def increment():
-    num_clicks = flask.request.json.get("num_clicks")
-    return flask.jsonify({"num_clicks_server": num_clicks + 1})
 
 
 app.run(

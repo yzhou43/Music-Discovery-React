@@ -4,21 +4,23 @@ import { useState, useRef } from 'react';
 function App() {
   // TODO: Implement your main page as a React component.
   const args = JSON.parse(document.getElementById('data').text);
-  const [numClicks, setNumClicks] = useState(0);
   const [newArtist, setNewArtist] = useState("");
   const [artistLists, setArtistLists] = useState(args.artist_ids);
 
-  // function onButtonClick() {
-  //   fetch('/increment', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ num_clicks: numClicks }),
-  //   }).then((response) => response.json()).then((data) => {
-  //     setNumClicks(data.numClicks_server);
-  //   });
-  // }
+  function saveArtist() {
+    fetch('/save', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ artist_list: artistLists }),
+    }).then((response) => response.json()).then((data) => {
+      setArtistLists(data.artistLists_server)
+      if (data.invalid_num) {
+        alert(data.invalid_num + " artists ID invalid!")
+      }
+    });
+  }
 
   const deleteArtist = (artistId) => {
     const newArtists = [...artistLists];
@@ -35,21 +37,16 @@ function App() {
     console.log(artistLists)
   }
 
-  function saveArtist() {
-    console.log(artistLists)
-  }
-
   return (
     <>
-      <h1>
+      <h1 class="title">
         {args.username}
         's Song Explorer
       </h1>
-      {/* <button onClick={onButtonClick}>Click Me!</button> */}
       {args.has_artists_saved ? (
         <>
-          <h2>{args.song_name}</h2>
-          <h3>{args.song_artist}</h3>
+          <h2 class="song-name">{args.song_name}</h2>
+          <h3 class="song-artist">{args.song_artist}</h3>
           <div>
             <img src={args.song_image_url} width={300} height={300} />
           </div>
@@ -68,23 +65,17 @@ function App() {
           return <tr>
             <td key={index}>{artistId}</td>
             <td>
-              <button type="button" onClick={() => deleteArtist(artistId)}>Delete</button>
+              <button type="button" class="delete" onClick={() => deleteArtist(artistId)}>Delete</button>
             </td>
           </tr>;
         })}
       </table>
       <h1>Save a favorite artist ID for later:</h1>
-      {/* <form method="POST" action="/save"> */}
-      <div>
+      <div class="add-artist">
         <input value={newArtist} onChange={e => setNewArtist(e.target.value)} />
         <button type="button" onClick={addArtist}>Add Artist</button>
-        <button type="button" onClick={saveArtist}>Save</button>
+        <button type="button" class="save" onClick={saveArtist}>Save</button>
       </div>
-      {/* <form onSubmit={submit}>
-        <input type="text" name="artist_id" required="required" />
-        <button type="button" onClick={otherAction}>Other Action</button>
-        <button type="submit">Submit</button>
-      </form> */}
     </>
   );
 }
