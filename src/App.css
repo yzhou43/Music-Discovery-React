@@ -54,3 +54,7 @@ audio {
 .flashes {
   color: red;
 }
+
+.table {
+  margin: auto;
+}

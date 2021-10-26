@@ -92,6 +92,7 @@ def index():
         "preview_url": preview_url,
         "genius_url": genius_url,
         "username": current_user.username,
+        "artist_ids": artist_ids
     }
     data = json.dumps(DATA)
     return flask.render_template(
