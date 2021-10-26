@@ -92,7 +92,7 @@ def index():
         "preview_url": preview_url,
         "genius_url": genius_url,
         "username": current_user.username,
-        "artist_ids": artist_ids
+        "artist_ids": artist_ids,
     }
     data = json.dumps(DATA)
     return flask.render_template(
@@ -177,7 +177,9 @@ def save():
             get_song_data(artist_id, access_token)
         except Exception:
             invalid_id = 1
-        if Artist.query.filter_by(artist_id=artist_id, username=current_user.username).first():
+        if Artist.query.filter_by(
+            artist_id=artist_id, username=current_user.username
+        ).first():
             invalid_id = 1
         if invalid_id:
             invalid_num += 1
