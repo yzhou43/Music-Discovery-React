@@ -20,6 +20,8 @@ function App() {
         setArtistLists(data.artistLists_server);
         if (data.invalid_num) {
           alert(data.invalid_num + ' artists ID invalid!');
+        } else {
+          alert('Saved!');
         }
       });
   }
