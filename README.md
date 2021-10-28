@@ -1,5 +1,4 @@
 # Project1 Milestone3
-This app can be found at https://project-milestone3-yzhou43.herokuapp.com/
 
 ## Install Requirements
 1. `pip install python-dotenv`  
