@@ -8,7 +8,7 @@ This app can be found at https://project-milestone3-yzhou43.herokuapp.com/
 4. install flask_login using `pip install flask-login`
 5. install flask_sqlalchemy using `pip install -U Flask-SQLAlchemy`
 6. install psycopg2 using `psycopg2` 
-7. install npm using `npm install`
+7. install npm using `sudo apt install npm`
 
 ## Set up
 1. Create `.env` file inside the project directory  
